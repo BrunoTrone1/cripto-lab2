@@ -1,0 +1,9 @@
+1. curl a login.php: curl -s -c cookies.txt -o login.html "http://127.0.0.1:8080/login.php"
+
+2. curl con las cookies y el user_toker: curl -i -b cookies.txt -c cookies.txt -L -X POST \
+        --data "username=admin&password=password&Login=Login&user_token=c8249a5d2617c8075d3f04bb51869ac8" \
+        "http://127.0.0.1:8080/login.php"
+        
+3. curl correcto a vulnerabilities/brute: curl -i -b cookies.txt -L "http://127.0.0.1:8080/vulnerabilities/brute/?username=admin&password=password&Login=Login"
+
+4. curl incorrecto a vulnerabilities/brute: curl -i -b cookies.txt -L "http://127.0.0.1:8080/vulnerabilities/brute/?username=admin&password=assword&Login=Login"
