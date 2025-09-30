@@ -1,0 +1,619 @@
+\documentclass[letter,12pt]{article}
+\usepackage[paperheight=27.94cm,paperwidth=21.59cm,bindingoffset=0in,left=3cm,right=2.0cm, top=3.5cm,bottom=2.5cm, headheight=200pt, headsep=1.0\baselineskip]{geometry}
+\usepackage{graphicx,lastpage}
+\usepackage{upgreek}
+\usepackage{censor}
+\usepackage[spanish,es-tabla]{babel}
+\usepackage{pdfpages}
+\usepackage{tabularx}
+\usepackage{graphicx}
+\usepackage{adjustbox}
+\usepackage{xcolor}
+\usepackage{colortbl}
+\usepackage{rotating}
+\usepackage{multirow}
+\usepackage[utf8]{inputenc}
+\usepackage{float}
+\usepackage{hyperref}
+% Paquetes para bloques de codigo
+\usepackage{listings}
+
+% Paquetes para bloques de codigo
+\usepackage{listings}
+\usepackage{xcolor}
+
+% Configuracion grafica
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour},   
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\ttfamily\footnotesize,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2
+}
+
+\lstset{style=mystyle}
+
+\renewcommand{\tablename}{Tabla}
+\usepackage{fancyhdr}
+\pagestyle{fancy}
+
+\fancyhead[L]{}
+%
+\begin{document}
+%
+   \title{\Huge{Informe Laboratorio 2}}
+
+   \author{\textbf{Sección 1} \\  \\Alumno Bruno Rosales \\ e-mail: bruno.rosales@mail.udp.cl}
+          
+   \date{Septiembre de 2025}
+
+   \maketitle
+   
+   \tableofcontents
+ 
+  \newpage
+  
+
+\section{Descripción de actividades}
+Utilizando la aplicación web vulnerable DVWA
+
+(Damn Vulnerable Web App - \href{https://github.com/digininja/DVWA}{https://github.com/digininja/DVWA} (Enlaces a un sitio externo.)) realice las siguientes actividades:
+
+
+\begin{itemize}
+    \item Despliegue la aplicación en su equipo utilizando docker. Detalle el procedimiento y explique los parámetros que utilizó.
+    \item Utilice Burpsuite (https://portswigger.net/burp/communitydownload (Enlaces a un sitio externo.)) para realizar un ataque de fuerza bruta contra formulario ubicado en vulnerabilities/brute. Explique el proceso y obtenga al menos 2 pares de usuario/contraseña válidos. Muestre las diferencias observadas en burpsuite.
+    \item Utilice la herramienta cURL, a partir del código obtenido de inspect elements de su navegador, para realizar un acceso válido y uno inválido al formulario ubicado en vulnerabilities/brute. Indique 4 diferencias entre la página que retorna el acceso válido y la página que retorna un acceso inválido.
+    \item Utilice la herramienta Hydra para realizar un ataque de fuerza bruta contra formulario ubicado en vulnerabilities/brute. Explique el proceso y obtenga al menos 2 pares de usuario/contraseña válidos.
+    \item Compare los paquetes generados por hydra, burpsuite y cURL. ¿Qué diferencias encontró? ¿Hay forma de detectar a qué herramienta corresponde cada paquete?
+
+    \item Desarrolle un script en Python para realizar un ataque de fuerza bruta:
+
+    \begin{itemize}
+        \item Utilice la librería requests para interactuar con el formulario ubicado en vulnerabilities/brute y desarrollar su propio script de fuerza bruta en Python.
+        El script debe realizar intentos de inicio de sesión probando una lista de combinaciones de usuario/contraseña.
+
+        \item  Identifique y explique la cabecera HTTP que empleará para realizar el ataque de fuerza bruta.
+
+        \item  Muestre el código y los resultados obtenidos (al menos 2 combinaciones válidas de usuario/contraseña).
+
+        \item Compare el rendimiento de este script en Python con las herramientas Hydra, Burpsuite, y cURL en términos de velocidad y detección.
+    \end{itemize}
+
+    \item  Investigue y describa 4 métodos comunes para prevenir o mitigar ataques de fuerza bruta en aplicaciones web:
+
+    \begin{itemize}
+        \item Para cada método, explique su funcionamiento, destacando en qué escenarios es más eficaz.
+
+    \end{itemize}
+
+
+    
+\end{itemize}
+
+\section{Desarrollo de actividades según criterio de rúbrica}
+
+\subsection{Levantamiento de docker para correr DVWA (dvwa)}
+En primera instancia, se utiliza la fuente oficial de DVWA en \href{https://github.com/BrunoTrone1/cripto_lab1/blob/main/algoritmo_cifrado.py}{GitHub}, clonando el repositorio mediante el comando \verb|git clone|, como se ve en la Figura \ref{actividad 1.1 git_clone}. Esto permite acceso a la imagen oficial de Docker.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=10cm]{actividades/actividad 1.1/git_clone.png}
+    \caption{Repositorio de DVWA en GitHub, clonado con git para su posterior levantamiento en Docker.}
+    \label{actividad 1.1 git_clone}
+\end{figure}
+
+Posteriormente, se utiliza el comando de \verb|docker-compose up -d|, para levantar los contenedores. Esto descarga las imágenes, si no están presentes, y las deja en segundo plano. Se puede apreciar en la Figura \ref{actividad 1.1 docker_run} el correcto funcionamiento de esto.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=10cm]{actividades/actividad 1.1/docker_run.png}
+    \caption{Contenedor DVWA ejecutado mediante 'docker-compose up' en terminal.}
+    \label{actividad 1.1 docker_run}
+\end{figure}
+
+Finalmente, se comprueba si se está funcionando todo de manera correcta al acceder a la página levantada localmente. Esto permite ver la página de DVWA de ingreso, lo que indica que todo funciona, como se aprecia en la Figura \ref{actividad 1.1 dvwa}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=10cm]{actividades/actividad 1.1/dvwa.png}
+    \caption{Página de DVWA levantada localmente, con la vista del ingreso.}
+    \label{actividad 1.1 dvwa}
+\end{figure}
+
+
+
+\subsection{Redirección de puertos en docker (dvwa)}
+Para hacer un cambio de los puertos usados del contenedor, se requiere modificar el docker-compose. Para esto se cambia el campo de \verb|ports|, añadiendo \verb|8080|, para que se utilicen estos. Se puede ver en el extracto de código de la Figura \ref{actividad 1.2 dokcer-compose} como se tiene el puerto modificado. Cabe destacar que se simplifica y cambia la imagen que usa el repositorio original de DVWA.
+
+\begin{figure}[H]
+    \centering
+    \begin{lstlisting}[language=Python]
+services:
+  dvwa:
+    image: vulnerables/web-dvwa
+    container_name: dvwa
+    ports:
+      - 8080:80
+    restart: always
+    \end{lstlisting}
+    \caption{Código del docker-compose de DVWA, para levantar el contenedor. Se modificó el campo de "ports", para redireccionar los puertos 8080:80.}
+    \label{actividad 1.2 dokcer-compose}
+\end{figure}
+
+El proceso de redirección del puerto funciona correctamente. Esto se aprecia al levantar el contenedor con el comando \verb|docker compose up d|, como se aprecia en la Figura \ref{actividad 1.2 docker_run}.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=10cm]{actividades/actividad 1.2/docker_run.png}
+    \caption{Contenedor DVWA ejecutado mediante 'dockler-compose up' en terminal, con los puertos cambiados.}
+    \label{actividad 1.2 docker_run}
+\end{figure}
+
+Posteriormente, se accede a la vista web, donde se ve que se está en el puerto \verb|8080|, como se puede ver en la Figura \ref{actividad 1.2 dvwa}. Lo que comprueba el correcto funcionamiento del redireccionamiento. Esto es relevante, ya que se usarán estos puertos para posteriores actividades.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=10cm]{actividades/actividad 1.2/dvwa.png}
+    \caption{Página de DVWA levantada localmente, con la vista del ingreso.}
+    \label{actividad 1.2 dvwa}
+\end{figure}
+
+
+\subsection{Obtención de consulta a replicar (burp)}
+En primera instancia se descarga Burpsuite en Arch Linux. Esta suite contiene varias herramientas, una de estas es el navegador Chromium que permite interceptar tráfico (en Proxy-Intercept). Otra herramienta útil es un simulador de ataques, entre los cuales se encuentra la opción de ataque por fuerza bruta.
+
+Para obtener la consulta a replicar, se navega en DVWA a la sección de ataques por fuerza bruta y se realiza un ingreso con las credenciales 'admin' y "password", correspondientes a usuario y contraseña, respectivamente. Esto se puede ver en la Figura \ref{actividad 1.3 dvwa_brute}. 
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=5cm]{actividades/actividad 1.3/dvwa_brute.png}
+    \caption{Ingreso en la sección de ataques de fuerza bruta de DVWA mediante el navegador de Burpsuite, para obtener la consulta a replicar.}
+    \label{actividad 1.3 dvwa_brute}
+\end{figure}
+
+Posteriormente, se identifica la solicitud GET realizada mediante el análisis de tráfico, junto con su estructura. Esta contiene tanto el usuario (user) y contraseña (password) en sus respectivos campos, como se puede apreciar en al Figura \ref{actividad 1.3 burp_fields}.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=10cm]{actividades/actividad 1.3/burp_fields.png}
+    \caption{Consulta realizada al hacer ingreso a DVWA mediante el navegador de Burpsuit. Se pueden identificar la consulta y sus campos.}
+    \label{actividad 1.3 burp_fields}
+\end{figure}
+
+\subsection{Identificación de campos a modificar (burp)}
+Los campos a modificar durante el ataque de fuerza bruta son los vistos en la Figura \ref{actividad 1.3 burp_fields}. Estos se ven en detalle al mandarlos a la sección de Intruder de Burpsuit, donde se puede hacer un análisis y marcarlos para su posterior modificación, como se aprecia en la Figura \ref{actividad 1.4 burp_fields}.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=10cm]{actividades/actividad 1.4/burp_fields.png}
+    \caption{Campos detectados de la consulta realizada. Se aprecian 'admin' y 'password' como usuario y contraseña, respectivamente.}
+    \label{actividad 1.4 burp_fields}
+\end{figure}
+
+\subsection{Obtención de diccionarios para el ataque (burp)}
+Para los diccionarios de ataque, se crearon 2, uno para el campo 'user' y otro para el campo "password", como se ve en las Figuras \ref{actividad 1.5 user_5} y \ref{actividad 1.5 password_5}, respectivamente. También se configura un grep para las solicitudes que se hacen, como se ve en la Figura \ref{actividad 1.5 grep}, a modo de bandera para marcar si se tiene un acierto, con la palabra 'Welcome' que se genera al acceder con las credenciales correctas.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=5cm]{actividades/actividad 1.5/user_5.png}
+    \caption{Diccionario de 5 de largo generado para el ataque.}
+    \label{actividad 1.5 user_5}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=5cm]{actividades/actividad 1.5/password_5.png}
+    \caption{Diccionario de 5 de largo generado para el ataque.}
+    \label{actividad 1.5 password_5}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=5cm]{actividades/actividad 1.5/grep.png}
+    \caption{Bandera generada para detectar un evento, en este caso la palabra 'Welcome' al ingresar con las credenciales.}
+    \label{actividad 1.5 grep}
+\end{figure}
+
+\subsection{Obtención de al menos 2 pares (burp)}
+Para el ataque, se decide utilizar el ataque 'Cluster bomb attack'. Este modo de ataque permite asignar una payload a cada posición del diccionario, iterando por todas las posibles combinaciones. Esto permite obtener la mayor cantidad de intentos de los diccionarios designados. El resultado se puede ver en la Figura \ref{actividad 1.6 burp_result}.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=10cm]{actividades/actividad 1.6/burp_result.png}
+    \caption{Resultado del ataque de fuerza bruta, con la bandera de 'Welcome' marcada con un "1".}
+    \label{actividad 1.6 burp_result}
+\end{figure}
+
+Para obtener 2 pares se opta por añadir 2 'admin' en el diccionario de usuario, de esta manera se itera 2 veces y se obtienen 2 posibles pares que dan un ingreso correcto. Esto se ve en la Figura \ref{actividad 1.6 burp_result_2}. 
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=10cm]{actividades/actividad 1.6/burp_result_2.png}
+    \caption{Resultado del ataque de fuerza bruta, con la bandera de 'Welcome' marcada con un "1", y los 2 pares de credenciales.}
+    \label{actividad 1.6 burp_result_2}
+\end{figure}
+
+\subsection{Obtención de código de inspect element (curl)}
+Para obtener el código del inspect element, se utiliza la herramienta de inspección desde el mismo navegador de Burpsuit. Esto permite ver el código HTML de la página web, desde donde se extrae la información del formulario que se envía para el ingreso con credenciales. Esto se puede apreciar en las Figuras 
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=10cm]{actividades/actividad 1.7/html_1.png}
+    \caption{Sección que se analiza mediante la inspección del navegador.}
+    \label{actividad 1.7 html_1}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=10cm]{actividades/actividad 1.7/html_2.png}
+    \caption{Sección del código HTML, donde se puede ver parte del formulario de ingreso, con los campos 'user' y "password".}
+    \label{actividad 1.7 html_2}
+\end{figure}
+
+\subsection{Utilización de curl por terminal (curl)}
+Para utilizar cURL por terminal para hacer peticiones a "vulnerabilities/brute", se tienen que hacer ciertos pasos antes. 
+
+En primera instancia, se tiene que obtener las 'cookies' y el 'usertoken' para, posteriormente, hacer la solicitud. Esto se hace mediante el comando 'curl -s -c cookies.txt -o login.html "http://127.0.0.1:8080/login.php' para obtener las 'Cookies' y el 'usertoken', como se puede ver en la Figura \ref{actividad 1.8 curl_login}
+y Figura \ref{actividad 1.8 curl_archivos}.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=10cm]{actividades/actividad 1.8/curl_login.png}
+    \caption{Petición POST realizada mediante cURL por terminal a "login.php", para obtener 'Cookies' y 'usertoken' de la sesión, mediante 'cookies.txt' y "login.html", respectivamente.}
+    \label{actividad 1.8 curl_login}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=10cm]{actividades/actividad 1.8/curl_archivos_login_php.png}
+    \caption{Archivos generados por la petición cURL, con 'cookies.txt' conteniendo las cookies y "login.html" \ el HTML con el usertoken.}
+    \label{actividad 1.8 curl_archivos}
+\end{figure}
+
+Posteriormente, se verifica que se haya realizado un ingreso correcto analizando el HTML resultante. Se puede ver en la Figura \ref{actividad 1.8 curl_login_php} la solicitud cURL a "login.php", usando las cookies obtenidas y el usertoken. Luego, en la Figura \ref{actividad 1.8 curl_welcome} se puede ver cómo se tiene marcado un título, el cual se muestra únicamente al ingresar al sitio con las credenciales, lo que nos dice que tenemos las credenciales y datos correctos.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=10cm]{actividades/actividad 1.8/curl_login_php.png}
+    \caption{Solicitud cURL realizada a "login.php" para verificar los datos obtenidos, utilizando cookies y usertoken obtenidos.}
+    \label{actividad 1.8 curl_login_php}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=10cm]{actividades/actividad 1.8/curl_welcome_login_php.png}
+    \caption{Extracto del código HTML de DVWA, con el titulo marcado, demostrando un correcto ingreso.}
+    \label{actividad 1.8 curl_welcome}
+\end{figure}
+
+Con los datos listos, se puede realizar solicitudes a "vulnerabilities/brute". La primera solicitud se hace con las credenciales correctas, como se ve en la Figura \ref{actividad 1.8 curl_brute_correcto}, generando una respuesta 200, como se ve en la Figura \ref{actividad 1.8 curl_brute_correctos_headers}, lo que indica que funciona y encuentra el sitio. Para verificar esto, se revisa el HMTL obtenido, y se aprecia la frase entregada al hacer ingreso correcto "Welcome to the password protected area admin", lo que indica que se logro correctamente. Esto se puede apreciar en la Figura \ref{actividad 1.8 curl_brute_correcto_html}.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=15cm]{actividades/actividad 1.8/curl_brute_correcto.png}
+    \caption{Solicitud cURL realizada a "vulnerabilities/brute", con los cookies obtenidos y las credenciales correctas.}
+    \label{actividad 1.8 curl_brute_correcto}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=7cm]{actividades/actividad 1.8/curl_brute_correctos_headers.png}
+    \caption{Headers o cabecera de la respuesta generada a la solicitud cURL, se aprecia el estado 200, lo que indica que existe respuesta.}
+    \label{actividad 1.8 curl_brute_correctos_headers}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=10cm]{actividades/actividad 1.8/curl_brute_correcto_html.png}
+    \caption{Extracto del HTML recibido como respuesta, donde se aprecia la frase "Welcome ...", indicando que se logro acceder correctamente.}
+    \label{actividad 1.8 curl_brute_correcto_html}
+\end{figure}
+
+Para la solicitud incorrecta, se hace el mismo procedimiento, cambiando el campo de "password" por una contraseña incorrecta. El resultado se aprecia en la Figura \ref{actividad 1.8 curl_brute_incorrecto}, con la solicitud y sus credenciales, en la Figura \ref{actividad 1.8 curl_brute_incorrecto_headers} se aprecian la cabecera de la respuesta, indicando un código 200. Finalmente, se verifica con el HTML, Figura \ref{actividad 1.8 curl_brute_incorrecto_html}, que indica un ingreso incorrecto.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=10cm]{actividades/actividad 1.8/curl_brute_incorrecto.png}
+    \caption{Solicitud cURL realizada a "vulnerabilities/brute", con los cookies obtenidos y las credenciales incorrectas.}
+    \label{actividad 1.8 curl_brute_incorrecto}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=10cm]{actividades/actividad 1.8/curl_brute_incorrecto_headers.png}
+    \caption{Headers o cabecera de la respuesta generada a la solicitud cURL, se aprecia el estado 200, lo que indica que existe respuesta.}
+    \label{actividad 1.8 curl_brute_incorrecto_headers}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=10cm]{actividades/actividad 1.8/curl_brute_incorrecto_html.png}
+    \caption{Extracto del HTML recibido como respuesta, donde se aprecia la frase indicando que no se logro acceder correctamente.}
+    \label{actividad 1.8 curl_brute_incorrecto_html}
+\end{figure}
+
+
+\subsection{Demuestra 4 diferencias (curl)}
+Se puede ver que en el HTML correcto aparece un mensaje de éxito: \texttt{<p>Welcome to the password protected area admin</p>}. En el HTML incorrecto se muestra un mensaje de error: \texttt{<pre>Username and/or password incorrect.</pre>}.
+
+Otra posible diferencia es que el HTML correcto incluye un recurso privado del usuario autenticado (\texttt{<img src="/hackable/users/admin.jpg" />}), indicando acceso. El HTML incorrecto no incluye ningún recurso protegido.
+
+Por otra parte, la versión correcta se usa un elemento de párrafo (\texttt{<p>}) y una imagen (\texttt{<img>}) para indicar éxito y mostrar contenido; en la versión incorrecta se usa un bloque preformateado (\texttt{<pre>}) para mostrar el error, lo que cambia la semántica y el estilo de presentación.
+
+Finalmente, la página correcta refleja un estado autenticado (bienvenida y recursos del admin), mientras que la página incorrecta refleja un estado no autenticado (error de credenciales), por lo que el flujo de login no permitió el acceso al área protegida.
+
+Todo el código se puede encontrar en la carpeta de \verb|cURL|, con \verb|html_correcto| y \verb|html_incorrecto|.
+
+\subsection{Instalación y versión a utilizar (hydra)}
+Para instalar Hydra, se utiliza el gestor de paquetes de Arch Linux, usando el comando \verb|sudo pacman -S hydra|. Se instala la versión 9.5.2 del paquete, como se ve en la Figura \ref{actividad 1.10 hydra}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=10cm]{actividades/actividad 1.10/hydra.png}
+    \caption{Descarga del paquete de Hydra en su versión 9.5.2, utilizando el gestor de paquetes de Arch.}
+    \label{actividad 1.10 hydra}
+\end{figure}
+
+\subsection{Explicación de comando a utilizar (hydra)}
+Similar al caso con cURL, primero se obtienen las cookies a utilizar en la petición, mediante una consulta cURL, como se aprecia en la Figura \ref{actividad 1.11 hydra_cookies}. 
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=15cm]{actividades/actividad 1.11/hydra_cookies.png}
+    \caption{cURL realizada para obtener las cookies a utilizar en la consulta de Hydra.}
+    \label{actividad 1.11 hydra_cookies}
+\end{figure}
+
+Posteriormente, se utiliza el comando \verb|hydra| para llamar al paquete. Las opciones '-L ./users.txt -P ./passwords.txt' indican archivos que contienen, respectivamente, listas de usuarios y listas de contraseñas que la herramienta usará como entradas.
+
+La parte \verb|127.0.0.1 -s 8080| especifica el objetivo de las pruebas: la dirección IP y el puerto donde está escuchando el servicio.
+
+La instrucción siguiente describe de forma conceptual cómo debe formarse la petición al formulario web: incluye marcadores de posición (\verb|^USER^ ^PASS^|) para insertar las credenciales probadas.
+
+\begin{verbatim}
+    http-get-form "/vulnerabilities/
+    brute/:username=^USER^&password=^PASS^&Login=Login:$HDR:F=Username
+    and/or password incorrect"
+\end{verbatim}
+
+Opciones como \verb|-t 4 -V -o ./hydra_results.txt| controlan detalles de ejecución: el número de hilos concurrentes, el modo verbatim para ver más información en pantalla y el fichero donde se guardan los resultados. El símbolo de back slash al final indica continuación de línea en la shell (solo formato). Esto se puede ver en la Figura \ref{actividad 1.11 hydra}.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=15cm]{actividades/actividad 1.11/hydra.png}
+    \caption{Consulta hecha en hydra mediante terminal.}
+    \label{actividad 1.11 hydra}
+\end{figure}
+
+Cabe destacar que todos los códigos se encuentran en la carpeta \verb|Hydra/codigos.txt|.
+
+\subsection{Obtención de al menos 2 pares (hydra)}
+El resultado del comando de la Figura \ref{actividad 1.11 hydra} da como resultado una serie de líneas mostrando las credenciales utilizadas. Además, se tiene al final un conteo de las credenciales que fueron válidas.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=10cm]{actividades/actividad 1.12/hydra_result.png}
+    \caption{Resultado de hydra, donde se aprecian los valores de usuario y contraseña utilizados.}
+    \label{actividad 1.12 hydra_result}
+\end{figure}
+
+Este resultado se encuentra en \verb|Hydra/hydra_results.txt|, el cual puede haber cambiado por ciertas ejecuciones, pero mantiene la misma estructura.
+
+Cabe destacar que se intentó filtrar para obtener los pares reales o válidos, pero no se logró. Se puede ver cómo todas las combinaciones son 'valid' o válidas.
+
+\subsection{Explicación paquete curl (tráfico)}
+Para la obtención del paquete curl, se capturó el tráfico con el filtro 'http \&\& ip.addr == 127.0.0.1 \&\& tcp.port == 8080' usando Wireshark. Esta captura y todas las demás se pueden encontrar en la carpeta \verb|Wireshark/|. 
+
+Por parte de cURL es un cliente que genera peticiones HTTP a través de una conexión TCP. Al ejecutarlo, abre un puerto efímero y se conecta al puerto destino del servidor (como por ejemplo 8080). La petición HTTP (método, cabeceras y posible cuerpo) se convierte en bytes que viajan como carga útil dentro de segmentos TCP.
+
+En el tráfico capturado se observa eso: un segmento desde el cliente hacia el servidor con unos 100 bytes, que corresponden a la petición enviada por curl. TCP asegura el envío correcto mediante números de secuencia y acuses de recibo. Como la comunicación es en localhost, todo ocurre rápido y sin pérdida, mostrando directamente la interacción básica de curl con el servidor HTTP. Esto se aprecia en la Figura \ref{actividad 1.13 curl}.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=10cm]{actividades/actividad 1.13/curl.png}
+    \caption{Extracto de la parte de HTTP del paquete cURL.}
+    \label{actividad 1.13 curl}
+\end{figure}
+
+\subsection{Explicación paquete burp (tráfico)}
+Este paquete corresponde a una comunicación en la interfaz loopback, es decir, entre el propio sistema (127.0.0.1 → 127.0.0.1). El frame tiene 875 bytes y usa el encabezado especial Linux cooked, típico cuando no hay transmisión física por Ethernet.
+
+En la capa de red se aprecia un datagrama IPv4 de 859 bytes con la bandera 'Don’t Fragment' activa, lo que indica que no debe dividirse en fragmentos, esto gracias a que se tiene la seguridad en baja. Otros campos como el TTL, la identificación o el checksum cumplen funciones de control y verificación, aunque en tráfico local suelen ser valores estándar.
+
+En la capa de transporte, TCP muestra un segmento con puerto de origen efímero (60800) hacia el destino 8080. Contiene 807 bytes de datos y lleva las banderas PSH y ACK: esto significa que el flujo de datos se está confirmando y además se solicita al receptor que los entregue inmediatamente a la aplicación. El tamaño de ventana y las opciones de tiempo (timestamps) forman parte del control de flujo y ayudan a medir retardos y evitar congestión.
+
+Finalmente, en la capa de aplicación, el contenido es una petición HTTP/1.1 de tipo GET hacia /vulnerabilities/brute/ con parámetros en la URL y cookies de sesión. Desde el punto de vista teórico, esto muestra cómo las credenciales viajan en texto claro dentro de la URI, lo cual es inseguro porque pueden quedar registradas en logs o cabeceras de referencia. La conexión se mantiene con keep-alive, lo que permite reutilizar la misma sesión TCP para más peticiones, optimizando el rendimiento. Un extracto se puede ver en la Figura \ref{actividad 1.14 burl}.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=10cm]{actividades/actividad 1.14/burp.png}
+    \caption{Extracto de la parte de HTTP del paquete Burp.}
+    \label{actividad 1.14 burl}
+\end{figure}
+
+\subsection{Explicación paquete hydra (tráfico)}
+El paquete visto en la Figura \ref{actividad 1.15 hydra} corresponde a tráfico local en la interfaz loopback (127.0.0.1 → 127.0.0.1), por eso la captura usa la cabecera “Linux cooked” en lugar de Ethernet. El frame completo tiene varios cientos de bytes, lo que indica que vemos el datagrama IP entero y su payload TCP/HTTP; al ser loopback, todo el intercambio se realiza dentro del mismo host y la observación refleja exactamente lo que la pila entregó a la aplicación.
+
+A nivel de red (IPv4) el datagrama muestra un Total Length grande y la bandera “Don’t Fragment” activada. Esos valores simplemente señalan que el paquete transporta mucho contenido y que la pila no permitirá fragmentación en tránsito.
+
+En la capa de transporte se aprecia un segmento TCP desde un puerto efímero (60800) hacia el servicio HTTP en 8080. El segmento lleva unas centenas de bytes de carga útil y las banderas PSH+ACK, lo que significa que son datos listos para pasar a la aplicación y que además se están reconociendo bytes previos. La cabecera TCP incluye opciones (NOP, timestamps) y una ventana pequeña; esas opciones ayudan al cálculo de RTT y al control de flujo, y configuran cómo se manejarán latencia y retransmisiones en la conexión.
+
+El payload aplica a HTTP/1.0 y contiene una petición GET cuyo Request-URI es /vulnerabilities/brute/../../login.php. Ese ../.. es un intento directo de path traversal: la petición busca salir del directorio actual y acceder a login.php en un nivel superior del árbol de ficheros. La solicitud lleva además una cookie de sesión (PHPSESSID=...; security=low) y el User‑Agent identifica la herramienta automatizada (Hydra), lo que refuerza la hipótesis de escaneo o ataque automatizado en búsqueda de vectores explotables.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=10cm]{actividades/actividad 1.15/hydra.png}
+    \caption{Extracto de la parte de HTTP del paquete Hydra.}
+    \label{actividad 1.15 hydra}
+\end{figure}
+
+\subsection{Mención de las diferencias (tráfico)}
+Entre las diferencias encontradas se tiene que Hydra es la herramienta más fácil de identificar ya que utiliza HTTP/1.0 (versión obsoleta), incluye explícitamente 'Hydra' en su User-Agent (Mozilla/5.0 (Hydra)), y envía solamente 2 headers mínimos (Host y User-Agent), sin incluir Accept, Accept-Language ni Accept-Encoding. cURL se identifica por su User-Agent distintivo (curl/8.16.0), usa HTTP/1.1 y envía 3 headers básicos incluyendo Accept: */*. Burp Suite es la más sofisticada, simulando completamente un navegador Firefox real con 8+ headers que incluyen Accept-Language (es-CL), Accept-Encoding moderno (gzip, deflate, br, zstd), Referer, Connection keep-alive y cookies de sesión completas. Estas diferencias se pueden ver en la Figura \ref{actividad 1.16 user_agent} y Figura \ref{actividad 1.16 headers}. Los códigos usados están en la carpeta \verb|Wireshark/codigos.txt|.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=5cm]{actividades/actividad 1.16/user_agent.png}
+    \caption{Extracto de los distintos 'user\_agent' detectados de los paquetes. Se puede apreciar las diferencias entre Burp, cURL, Hydra.}
+    \label{actividad 1.16 user_agent}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=10cm]{actividades/actividad 1.16/headers.png}
+    \caption{Extracto de los distintos 'headers' detectados de los paquetes. Se puede apreciar las diferencias entre Burp, cURL, Hydra.}
+    \label{actividad 1.16 headers}
+\end{figure}
+
+Por otra parte, se tiene que Hydra genera múltiples requests paralelos en rápida sucesión (milisegundos de diferencia) debido a su naturaleza de fuerza bruta automatizada con múltiples hilos simultáneos (-t 4 en tu caso). cURL típicamente genera un único request manual o requests espaciados según la ejecución del usuario. Burp Suite produce requests individuales más espaciados temporalmente, ya que generalmente se usa de forma manual o semi-automatizada desde el Repeater/Intruder, mostrando un patrón de timing más humano y controlado. Esta diferencia en el patrón temporal es crucial para detectar ataques automatizados: Hydra destaca por su volumen alto y velocidad constante. Esto se puede ver en la Figura \ref{actividad 1.16 time} y Figura \ref{actividad 1.16 numero}.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=4cm]{actividades/actividad 1.16/time.png}
+    \caption{Extracto de los distintos tiempos detectados de los paquetes. Se puede apreciar las diferencias entre Burp, cURL, Hydra.}
+    \label{actividad 1.16 time}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=10cm]{actividades/actividad 1.16/numero.png}
+    \caption{Extracto de los distintas cantidades detectadas de los paquetes. Se puede apreciar las diferencias entre Burp, cURL, Hydra.}
+    \label{actividad 1.16 numero}
+\end{figure}
+
+\subsection{Detección de SW (tráfico)}
+La forma más simple y fiable es mirar el header User-Agent en la petición HTTP: muchos clientes lo ponen por defecto y dice explícitamente la herramienta. En una captura pcap se puede extraer con 'tshark -r captura.pcap -Y http.request -T fields -e http.user\_agent', similar a como se hizo en la sección anterior.
+
+Si no hay User‑Agent (o está falsificado), se pueden buscar huellas de protocolo: orden y presencia de cabeceras (p. ej. Accept, Sec‑Fetch-*, sec‑ch-ua) suelen indicar un navegador; curl y herramientas automatizadas llevan cabeceras  propias. También se puede observar si la petición es HTTP/1.0 vs 1.1, Connection: keep-alive, y el formato de la URI —todo eso son pistas heurísticas.
+
+A nivel TCP/TLS hay fingerprints útiles: las opciones TCP (orden de NOP, timestamps), tamaño de ventana, y en TLS el ClientHello (ciphersuites y extensiones) permiten identificar clientes. Herramientas como tshark/ja3 extraen estos fingerprints y comparan con bases conocidas para mapear navegadores, curl/openssl, etc.
+
+También se puede optar por analizar el comportamiento y patrones temporales. Herramientas automatizadas suelen generar muchas peticiones rápido, con secuencias regulares, URIs probadas en serie o User‑Agents repetidos. Eso difiere del tráfico humano (patrones más lentos y variabilidad en headers).
+
+Finalmente, en sistemas locales se puede confirmar mirando procesos y sockets: lsof -i :8080 o ss -plnt te muestran qué proceso abrió la conexión (útil en loopback).
+
+\subsection{Interacción con el formulario (python)}
+El script Python interactúa con el formulario mediante peticiones HTTP GET con parámetros en la URL, como se ve en la Figura \ref{actividad 1.18 script}.
+
+\begin{figure}[H]
+    \centering
+    \begin{verbatim}
+    # El script construye los parametros del formulario
+params = {
+    "username": "admin",      # Campo del formulario
+    "password": "password",   # Campo del formulario
+    "Login": "Login"          # Boton de submit
+}
+
+# Hace la peticion GET
+response = requests.get(URL, params=params, headers=headers)
+    \end{verbatim}  
+    \caption{Extracto del código en Python, mostrando como interactúa con el formulario.}
+    \label{actividad 1.18 script}
+\end{figure}
+
+Cabe destacar que el código completo se encuentra en la carpeta \verb|Python|.
+
+\subsection{Cabeceras HTTP (python)}
+Para esto se requieren los headers vistos en la Figura \ref{actividad 1.18 headers}.
+
+\begin{figure}[H]
+    \centering
+    \begin{verbatim}
+headers = {
+    "Cookie": f"security=low; PHPSESSID={PHPSESSID}"
+}
+    \end{verbatim}  
+    \caption{Extracto del código en Python, mostrando los headers que interactúan con el formulario.}
+    \label{actividad 1.18 headers}
+\end{figure}
+
+La 'Cookie' es crítica porque 'PHPSESSID' le dice al servidor quién eres (tu sesión), . Por otra parte, 'security=low' dice a DVWA qué nivel de seguridad usar. Sin estas cookies, el servidor te redirige al 'login'.
+
+\subsection{Obtención de al menos 2 pares (python)}
+Para la obtención de al menos 2 pares de credenciales válidas, se ejecuta el código de Python con \verb|python3 brute_force.py|. Esto realiza las solicitudes mediante 'requests' a la URL, utilizando las cabeceras obtenidas desde el navegador. Este script recorre un diccionario de 6 de largo para usuarios (con admin repetido) y 5 contraseñas. Esto permite encontrar 2 pares, y se puede ver en la Figura \ref{actividad 1.20 ejecucion}.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=10cm]{actividades/actividad 1.20/ejecucion.png}  
+    \caption{Extracto de la ejecución del script de Python, probando las posibles combinaciones de usuario y contraseña. Se puede ver destacado las combinaciones válidas.}
+    \label{actividad 1.20 ejecucion}
+\end{figure}
+
+Como resultado se tienen 2 posibles credenciales válidas, 'admin' como usuario y 'password' como contraseña. Esto se puede ver en la Figura \ref{actividad 1.20 2_pares}.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=10cm]{actividades/actividad 1.20/2_pares.png}  
+    \caption{Extracto del resultado de la ejecución del script de Python, donde se pueden ver destacadas las combinaciones válidas 'admin' y 'password'.}
+    \label{actividad 1.20 2_pares}
+\end{figure}
+
+\subsection{Comparación de rendimiento con Hydra, Burpsuite, y cURL (python)}
+Hydra es la herramienta más rápida y eficiente para fuerza bruta, alcanzando 10-50 requests por segundo gracias a su arquitectura multi-thread optimizada y estar compilado en C (lenguaje conocido por su velocidad y eficiencia). Fue diseñado específicamente para este propósito, utilizando conexiones persistentes y manejo inteligente de recursos. Es la opción profesional cuando el tiempo es crítico y se necesita probar miles de combinaciones rápidamente.
+
+Por su parte, Python (especificamente el script desarrollado) ofrece un rendimiento intermedio de 1-3 requests por segundo en modo secuencial, pero su verdadero valor está en la flexibilidad: puede mejorarse fácilmente con threading, manejar lógica compleja, analizar respuestas HTML detalladamente, y adaptarse a escenarios específicos como tokens CSRF o CAPTCHAs. El overhead del intérprete lo hace más lento que Hydra, pero su capacidad de personalización lo hace ideal cuando se requiere más que un simple ataque automatizado.
+
+Se tiene que cURL es la opción más lenta (0.5-1 request/segundo) porque cada ejecución crea un proceso nuevo del sistema operativo con su propio handshake TCP completo, sin mantener conexiones persistentes. No fue diseñado para ataques masivos sino para requests individuales, debugging manual, y pruebas puntuales. Es completamente impráctica para fuerza bruta con muchas combinaciones.
+
+Por último, se tiene que Burp Suite Free está intencionalmente limitado a 0.4-1 request/segundo para diferenciarse de la versión profesional, haciéndolo comparable a cURL en velocidad. Su valor real está en la interfaz gráfica intuitiva, análisis visual de respuestas, capacidades de intercepción de proxy, y funcionalidades educativas. La versión profesional puede igualar a Hydra en velocidad, pero para ataques de fuerza bruta simples, la versión gratuita es inadecuada por sus restricciones artificiales de velocidad.
+
+\newpage
+
+\subsection{Demuestra 4 métodos de mitigación (investigación)}
+Existen diferentes métodos de mitigación para ataques de fuerza bruta. Entre los investigados está el método de limitación de tasa y bloqueo progresivo, el cual controla la cantidad de intentos de acceso que un usuario o una IP puede realizar en un periodo de tiempo, aplicando bloqueos temporales crecientes para frenar ataques automatizados sin afectar excesivamente a usuarios legítimos. 
+
+Otro posible método es la autenticación multifactor (MFA) y políticas de contraseñas, las cuales añaden una capa extra de seguridad, de modo que incluso si un atacante obtiene la contraseña, el segundo factor impide el acceso; ademas, las políticas de contraseñas fuertes reducen la posibilidad de que se adivinen fácilmente (alta entropía). 
+
+Por otra parte, se tiene que la detección de anomalías y correlación avanzada sirven contra ataques, esto mediante un análisis de patrones de acceso y eventos de forma centralizada para, permitiendo identificar comportamientos sospechosos, permitiendo reaccionar de manera automática ante ataques distribuidos o sofisticados. 
+
+Por último, los desafíos adaptativos y trampas como CAPTCHA, honeytokens y listas de reputación, permiten distinguir entre usuarios reales y bots, detectando intentos de reconocimiento o exploración automatizada sin afectar significativamente la experiencia de los usuarios legítimos.
+
+Estos se exponen en la siguiente tabla.
+
+\begin{table}[htbp]
+\centering
+\begin{tabular}{|l|p{10cm}|}
+\hline
+\textbf{Metodo} & \textbf{Descripcion breve} \\
+\hline
+Limitacion de tasa & Reduce la cantidad de intentos automatizados aplicando rate limiting y bloqueos progresivos. \\
+\hline
+MFA y políticas de contrasenas & Protege cuentas incluso si la contrasena es robada, usando MFA y reglas de contrasenas robustas. \\
+\hline
+Deteccion de anomalias & Identifica ataques sofisticados mediante analisis de patrones, correlacion de eventos y alertas automatizadas. \\
+\hline
+Desafios y trampas & Distingue bots de humanos usando CAPTCHA adaptativo, reputacion IP y honeytokens para deteccion proactiva. \\
+\hline
+\end{tabular}
+\caption{Resumen de los métodos de mitigación investigados.}
+\label{tab:mitigacion_compacta}
+\end{table}
+
+
+\section*{Conclusiones y comentarios}
+El desarrollo de este laboratorio permitió aplicar de forma práctica distintas técnicas de ataque de fuerza bruta sobre una aplicación web vulnerable (DVWA), utilizando herramientas como Burp Suite, cURL, Hydra y un script propio en Python. Cada aproximación mostró ventajas y limitaciones: Hydra destacó por su velocidad y eficiencia; Python, por su flexibilidad y capacidad de personalización; Burp Suite, por su interfaz gráfica y capacidades de análisis; y cURL, como una opción más manual y didáctica.
+
+El análisis del tráfico en Wireshark permitió identificar patrones característicos de cada herramienta, lo que demuestra que no solo es posible ejecutar ataques, sino también detectarlos mediante inspección de cabeceras, comportamiento de red y fingerprints de software. Asimismo, la comparación de rendimientos evidenció cómo el diseño y optimización de cada herramienta afecta directamente la velocidad y la detección.
+
+Finalmente, la investigación de métodos de mitigación reafirma la importancia de implementar controles de seguridad multicapa, tales como la limitación de tasa, la autenticación multifactor, la detección de anomalías y el uso de desafíos adaptativos. Estos mecanismos no solo reducen la superficie de ataque, sino que también fortalecen la resiliencia de los sistemas frente a intentos automatizados y sofisticados.
+
+En conjunto, este laboratorio entregó una visión integral del ciclo ataque–detección–mitigación, consolidando el aprendizaje tanto técnico como crítico en ciberseguridad aplicada.
+
+\end{document}
