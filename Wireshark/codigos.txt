@@ -1,0 +1,29 @@
+1. User agent:
+tshark -r curl_filtrado.pcap -Y http.request -T fields -e http.user_agent 2>/dev/null | head -1
+
+tshark -r hydra_filtrado.pcap -Y http.request -T fields -e http.user_agent 2>/dev/null | head -1
+
+tshark -r burp_filtrado.pcap -Y http.request -T fields -e http.user_agent 2>/dev/null | head -1
+
+2. Numero de request:
+tshark -r curl_filtrado.pcap -Y http.request 2>/dev/null | wc -l
+
+tshark -r hydra_filtrado.pcap -Y http.request 2>/dev/null | wc -l
+
+tshark -r burp_filtrado.pcap -Y http.request 2>/dev/null | wc -l
+
+3. Tiempo entre request:
+
+tshark -r hydra_filtrado.pcap -Y http.request -T fields -e frame.time_relative 2>/d
+ev/null | head -5
+
+tshark -r curl_filtrado.pcap -Y http.request -T fields -e frame.time_relative 2>/d
+ev/null | head -5
+
+tshark -r burp_filtrado.pcap -Y http.request -T fields -e frame.time_relative 2>/d
+ev/null | head -5
+
+4. Comparacion de headers:
+echo "=== cURL ===" && tshark -r curl_filtrado.pcap -Y http.request -V 2>/dev/null | grep -A 20 "Hypertext Transfer Protocol" | head -25
+  echo -e "\n=== Hydra ===" && tshark -r hydra_filtrado.pcap -Y http.request -V 2>/dev/null | grep -A 20 "Hypertext Transfer Protocol" | head -25
+  echo -e "\n=== Burp ===" && tshark -r burp_filtrado.pcap -Y http.request -V 2>/dev/null | grep -A 20 "Hypertext Transfer Protocol" | head -25
